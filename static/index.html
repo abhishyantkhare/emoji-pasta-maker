@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H555N7L4CQ"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-H555N7L4CQ');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Pasta Generator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            min-height: 50px;
+            text-align: center;
+            font-size: 16px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        #copyButton {
+            display: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        #copyButton:hover {
+            background-color: #218838;
+        }
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            textarea, #result {
+                font-size: 14px;
+            }
+            button, #copyButton {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <script>
+        function getTopicFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('topic') || '';
+        }
+
+        function setTopicInURL(topic) {
+            const url = new URL(window.location);
+            url.searchParams.set('topic', topic);
+            window.history.pushState({}, '', url);
+        }
+
+        window.onload = function() {
+            const topicTextarea = document.getElementById('topic');
+            const urlTopic = getTopicFromURL();
+            if (urlTopic) {
+                topicTextarea.value = urlTopic;
+                handleSubmit(new Event('submit'));
+            }
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const topic = document.getElementById('topic').value;
+            setTopicInURL(topic);
+            const resultDiv = document.getElementById('result');
+            const copyButton = document.getElementById('copyButton');
+            resultDiv.textContent = 'Loading...';
+            copyButton.style.display = 'none';
+
+            try {
+                const response = await fetch(`${window.location.origin}/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ topic })
+                });
+
+                const responseData = await response.json();
+                resultDiv.textContent = responseData.data.replace(/(\r\n|\n|\r)/gm, "");
+                copyButton.style.display = 'block';
+            } catch (error) {
+                resultDiv.textContent = 'An error occurred. Please try again.';
+            }
+        }
+
+        function copyToClipboard() {
+            const resultDiv = document.getElementById('result');
+            const copyButton = document.getElementById('copyButton');
+            navigator.clipboard.writeText(resultDiv.textContent).then(() => {
+                copyButton.textContent = 'Copied';
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy';
+                }, 3000);
+            }, (err) => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Emoji Pasta Generator</h1>
+    <div style="margin-bottom: 10px;">Make your own emoji pasta for any topic</div>
+    <form onsubmit="handleSubmit(event)">
+        <label for="topic">Enter a topic:</label>
+        <textarea id="topic" name="topic" required></textarea>
+        <button type="submit">Generate</button>
+    </form>
+    <div id="result"></div>
+    <button id="copyButton" onclick="copyToClipboard()">Copy</button>
+    <footer>
+        By Abhishyant Khare | <a href="mailto:abhishyant@gmail.com">abhishyant@gmail.com</a> | <a href="https://github.com/abhishyantkhare">GitHub</a>
+    </footer>
+</body>
+</html>
