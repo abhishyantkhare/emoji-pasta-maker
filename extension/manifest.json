@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Emoji Pasta Maker",
+  "version": "1.0",
+  "description": "Replaces text in paragraph tags with emoji pasta version",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://emoji-pasta-maker.fly.dev/"
+  ],
+  "action": {
+    "default_title": "Make Emoji Pasta"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}

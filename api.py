@@ -75,12 +75,18 @@ def read_item(request: GenerateRequest):
         messages=[{"role": "system", "content": PROMPT.format(topic=request.topic)}],
         model="gpt-4o-mini",
     )
-    return {"data": extract_pasta_content(resp.choices[0].message.content)}
+    generation = extract_pasta_content(resp.choices[0].message.content)
+    log_msg = f"""
+    topic: {request.topic}
+    generation: {generation}
+    """
+    print(log_msg)
+    return {"data": generation}
 
 
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 origins = [
-    "http://localhost:8000",
+    "*",
 ]
 app.add_middleware(
     CORSMiddleware,

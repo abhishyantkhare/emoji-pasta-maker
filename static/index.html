@@ -68,6 +68,10 @@
             margin-bottom: 10px;
             box-sizing: border-box;
         }
+        .copy-buttons {
+            display: flex;
+            gap: 10px;
+        }
         #copyButton, #copyWithTopicButton {
             display: none;
             padding: 10px 20px;
@@ -183,8 +187,10 @@
         <button type="submit">Generate</button>
     </form>
     <div id="result"></div>
-    <button id="copyButton" onclick="copyToClipboard()">Copy</button>
-    <button id="copyWithTopicButton" onclick="copyToClipboard(true)">Copy with Topic</button>
+    <div class="copy-buttons">
+        <button id="copyButton" onclick="copyToClipboard()">Copy</button>
+        <button id="copyWithTopicButton" onclick="copyToClipboard(true)">Copy with Topic</button>
+    </div>
     <footer>
         By Abhishyant Khare | <a href="mailto:abhishyant@gmail.com">abhishyant@gmail.com</a> | <a href="https://github.com/abhishyantkhare">GitHub</a>
     </footer>

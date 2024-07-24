@@ -2,3 +2,5 @@
 # Automatically created by mypy
 .mypy_cache/**/*
 fly.toml
+
+extension
